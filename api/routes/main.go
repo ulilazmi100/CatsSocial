@@ -18,4 +18,10 @@ func RouteRegister(app *fiber.App, deps handlers.Dependencies) {
 
 	UserRoutes(app, userHandler)
 
+	catHandler := handlers.Cat{
+		Database:     functions.NewCatFn(deps.DbPool),
+		UserDatabase: functions.NewUser(deps.DbPool, deps.Cfg),
+	}
+
+	CatRoutes(app, catHandler)
 }
