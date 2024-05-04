@@ -61,11 +61,11 @@ func (p *Cat) constructWhereQuery(ctx context.Context, filter models.FilterGetCa
 
 	if filter.AgeInMonthOperator != "" {
 		if filter.AgeInMonthOperator == "=>" {
-			whereSQL = append(whereSQL, " ageInMonth >= "+fmt.Sprintf("%d", filter.AgeInMonthValue))
+			whereSQL = append(whereSQL, " age_in_month >= "+fmt.Sprintf("%d", filter.AgeInMonthValue))
 		} else if filter.AgeInMonthOperator == "=<" {
-			whereSQL = append(whereSQL, " ageInMonth <= "+fmt.Sprintf("%d", filter.AgeInMonthValue))
+			whereSQL = append(whereSQL, " age_in_month <= "+fmt.Sprintf("%d", filter.AgeInMonthValue))
 		} else {
-			whereSQL = append(whereSQL, " ageInMonth = "+fmt.Sprintf("%d", filter.AgeInMonthValue))
+			whereSQL = append(whereSQL, " age_in_month = "+fmt.Sprintf("%d", filter.AgeInMonthValue))
 		}
 	}
 
