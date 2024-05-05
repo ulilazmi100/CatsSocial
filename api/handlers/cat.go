@@ -362,7 +362,9 @@ func (p *Cat) UpdateCat(c *fiber.Ctx) error {
 		}
 		return p.handleError(c, err)
 	}
-	if cat.HasMatched {
+
+	// 400 sex is edited when cat is already requested to match
+	if cat.HasMatched && (len(payload.Sex) != 0) {
 		return p.handleError(c, fiber.ErrBadRequest)
 	}
 

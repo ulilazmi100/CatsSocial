@@ -41,15 +41,15 @@ func (p *Cat) constructWhereQuery(ctx context.Context, filter models.FilterGetCa
 	}
 
 	if filter.Id != "" {
-		whereSQL = append(whereSQL, " condition = '"+filter.Id+"'")
+		whereSQL = append(whereSQL, " id = '"+filter.Id+"'")
 	}
 
 	if filter.Race != "" {
-		whereSQL = append(whereSQL, " condition = '"+filter.Race+"'")
+		whereSQL = append(whereSQL, " race = '"+filter.Race+"'")
 	}
 
 	if filter.Sex != "" {
-		whereSQL = append(whereSQL, " condition = '"+filter.Sex+"'")
+		whereSQL = append(whereSQL, " sex = '"+filter.Sex+"'")
 	}
 
 	if filter.HasMatched {
