@@ -33,7 +33,7 @@ func validateUser(req struct {
 		return errors.New("email is not in a valid format")
 	}
 
-	if lenPassword < 5 || lenName < 5 {
+	if lenPassword < 5 || lenEmail < 5 {
 		return errors.New("email and password length must be at least 5 characters")
 	}
 
