@@ -100,7 +100,7 @@ func (u *User) GetUserById(ctx context.Context, userID string) (models.User, err
 
 	var result models.User
 
-	err = conn.QueryRow(ctx, `SELECT id, email, name FROM users WHERE id = $1`, userID).Scan(&result.Id, &result.Email, &result.Name)
+	err = conn.QueryRow(ctx, `SELECT id, email, name, created_at FROM users WHERE id = $1`, userID).Scan(&result.Id, &result.Email, &result.Name, &result.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return result, ErrNoRow
 	}

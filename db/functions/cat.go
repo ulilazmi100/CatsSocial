@@ -88,7 +88,7 @@ func (p *Cat) FindAll(ctx context.Context, filter models.FilterGetCats, userID i
 
 	defer conn.Release()
 
-	sql := `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched FROM cats`
+	sql := `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at FROM cats`
 
 	sql += p.constructWhereQuery(ctx, filter, userID)
 
@@ -113,7 +113,7 @@ func (p *Cat) FindAll(ctx context.Context, filter models.FilterGetCats, userID i
 
 	for rows.Next() {
 		cat := models.Cat{}
-		err := rows.Scan(&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched)
+		err := rows.Scan(&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("failed scan cats: %v", err)
 		}
@@ -221,8 +221,8 @@ func (p *Cat) FindByID(ctx context.Context, catID int) (models.Cat, error) {
 
 	var cat models.Cat
 
-	err = conn.QueryRow(ctx, `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched FROM cats WHERE id = $1`, catID).Scan(
-		&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched,
+	err = conn.QueryRow(ctx, `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at FROM cats WHERE id = $1`, catID).Scan(
+		&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt,
 	)
 
 	if err != nil {
@@ -245,8 +245,8 @@ func (p *Cat) FindByIDUser(ctx context.Context, catID int, userID int) (models.C
 
 	var cat models.Cat
 
-	err = conn.QueryRow(ctx, `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched FROM cats WHERE id = $1 AND user_id = $2`, catID, userID).Scan(
-		&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched,
+	err = conn.QueryRow(ctx, `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at FROM cats WHERE id = $1 AND user_id = $2`, catID, userID).Scan(
+		&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

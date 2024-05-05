@@ -24,4 +24,12 @@ func RouteRegister(app *fiber.App, deps handlers.Dependencies) {
 	}
 
 	CatRoutes(app, catHandler)
+
+	matchHandler := handlers.MatchHandler{
+		Match:        *functions.NewMatch(deps.DbPool),
+		CatDatabase:  functions.NewCatFn(deps.DbPool),
+		UserDatabase: functions.NewUser(deps.DbPool, deps.Cfg),
+	}
+
+	MatchRoutes(app, matchHandler)
 }

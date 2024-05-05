@@ -147,14 +147,14 @@ func parseAgeInMonthQuery(query string) (string, int, error) {
 	return operator, value, nil
 }
 
-func (p *Cat) convertCatEntityToResponse(cat models.Cat) CatResponse {
+func (p *Cat) convertCatModelToResponse(cat models.Cat) CatResponse {
 	return CatResponse{
 		Id:        strconv.Itoa(cat.ID),
 		CreatedAt: cat.CreatedAt.Format(time.RFC3339),
 	}
 }
 
-func (p *Cat) convertCatEntityToDetailResponse(cat models.Cat) CatDetailResponse {
+func (p *Cat) convertCatModelToDetailResponse(cat models.Cat) CatDetailResponse {
 	return CatDetailResponse{
 		Id:          strconv.Itoa(cat.ID),
 		Name:        cat.Name,
@@ -174,7 +174,7 @@ func (p *Cat) convertCatsToGetCatsResponse(
 ) GetCatsResponse {
 	var result []CatDetailResponse
 	for _, cat := range cats {
-		result = append(result, p.convertCatEntityToDetailResponse(cat))
+		result = append(result, p.convertCatModelToDetailResponse(cat))
 	}
 
 	return GetCatsResponse{
@@ -320,7 +320,7 @@ func (p *Cat) AddCat(c *fiber.Ctx) error {
 		return p.handleError(c, err)
 	}
 
-	result := p.convertCatEntityToResponse(cat)
+	result := p.convertCatModelToResponse(cat)
 
 	return c.Status(http.StatusCreated).JSON(map[string]interface{}{
 		"message": "success",
