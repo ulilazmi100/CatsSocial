@@ -29,8 +29,8 @@ func (m *Match) Create(ctx context.Context, match models.Match) error {
 
 	defer conn.Release()
 
-	_, err = conn.Exec(ctx, `INSERT INTO matches (user_id, match_cat_id, user_cat_id, message) values($1, $2, $3, $4)`,
-		match.UserId, match.MatchCatId, match.UserCatId, match.Message,
+	_, err = conn.Exec(ctx, `INSERT INTO matches (user_id, match_user_id, match_cat_id, user_cat_id, message, status) values($1, $2, $3, $4, $5, $6)`,
+		match.UserId, match.MatchUserId, match.MatchCatId, match.UserCatId, match.Message, match.Status,
 	)
 
 	return err
