@@ -113,7 +113,7 @@ func (p *Cat) FindAll(ctx context.Context, filter models.FilterGetCats, userID i
 
 	for rows.Next() {
 		cat := models.Cat{}
-		err := rows.Scan(&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt)
+		err := rows.Scan(&cat.Id, &cat.UserId, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("failed scan cats: %v", err)
 		}
@@ -153,26 +153,25 @@ func (p *Cat) Add(ctx context.Context, cat models.Cat) (models.Cat, error) {
 	defer conn.Release()
 
 	sql := `
-		INSERT INTO cats (user_id, name, race, sex, age_in_month, description, image_urls, has_matched) 
-		values ($1, $2, $3, $4, $5, $6, $7, 0)
+		INSERT INTO cats (user_id, name, race, sex, age_in_month, description, image_urls) 
+		values ($1, $2, $3, $4, $5, $6, $7) RETURNING id, created_at
 	`
 
 	var result models.Cat
 
-	err = conn.QueryRow(ctx, sql, cat.UserID,
+	err = conn.QueryRow(ctx, sql, cat.UserId,
 		cat.Name,
 		cat.Race,
 		cat.Sex,
 		cat.AgeInMonth,
 		cat.Description,
-		cat.ImageUrls,
-		cat.HasMatched).Scan(&result.ID, &result.CreatedAt)
+		cat.ImageUrls).Scan(&result.Id, &result.CreatedAt)
 
 	if err != nil {
 		return models.Cat{}, fmt.Errorf("failed insert cat: %v", err)
 	}
 
-	cat.ID = result.ID
+	cat.Id = result.Id
 	cat.CreatedAt = result.CreatedAt
 
 	return cat, nil
@@ -199,8 +198,8 @@ func (p *Cat) Update(ctx context.Context, cat models.Cat) error {
 		cat.Description,
 		cat.ImageUrls,
 		cat.HasMatched,
-		cat.ID,
-		cat.UserID)
+		cat.Id,
+		cat.UserId)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return ErrNoRow
@@ -222,7 +221,7 @@ func (p *Cat) FindByID(ctx context.Context, catID int) (models.Cat, error) {
 	var cat models.Cat
 
 	err = conn.QueryRow(ctx, `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at FROM cats WHERE id = $1`, catID).Scan(
-		&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt,
+		&cat.Id, &cat.UserId, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt,
 	)
 
 	if err != nil {
@@ -246,7 +245,7 @@ func (p *Cat) FindByIDUser(ctx context.Context, catID int, userID int) (models.C
 	var cat models.Cat
 
 	err = conn.QueryRow(ctx, `SELECT id, user_id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at FROM cats WHERE id = $1 AND user_id = $2`, catID, userID).Scan(
-		&cat.ID, &cat.UserID, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt,
+		&cat.Id, &cat.UserId, &cat.Name, &cat.Race, &cat.Sex, &cat.AgeInMonth, &cat.Description, &cat.ImageUrls, &cat.HasMatched, &cat.CreatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

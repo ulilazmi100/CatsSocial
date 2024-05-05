@@ -134,7 +134,7 @@ func (m *MatchHandler) Create(c *fiber.Ctx) error {
 	}
 
 	//400 if matchCatId & userCatId is from the same owner
-	if cat.UserID == matchCat.UserID {
+	if cat.UserId == matchCat.UserId {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
@@ -181,7 +181,7 @@ func (m *MatchHandler) getCatDetail(c *fiber.Ctx, catId int) (CatDetailResponse,
 	}
 
 	return CatDetailResponse{
-		Id:          strconv.Itoa(cat.ID),
+		Id:          strconv.Itoa(cat.Id),
 		Name:        cat.Name,
 		Race:        cat.Race,
 		Sex:         cat.Sex,

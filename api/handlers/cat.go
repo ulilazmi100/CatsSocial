@@ -95,6 +95,7 @@ type (
 )
 
 func (app CatPayload) Validate() error {
+
 	return validation.ValidateStruct(&app,
 		// Name cannot be empty, and the length must be between 1 and 30.
 		validation.Field(&app.Name, validation.Required, validation.Length(1, 30)),
@@ -149,14 +150,14 @@ func parseAgeInMonthQuery(query string) (string, int, error) {
 
 func (p *Cat) convertCatModelToResponse(cat models.Cat) CatResponse {
 	return CatResponse{
-		Id:        strconv.Itoa(cat.ID),
+		Id:        strconv.Itoa(cat.Id),
 		CreatedAt: cat.CreatedAt.Format(time.RFC3339),
 	}
 }
 
 func (p *Cat) convertCatModelToDetailResponse(cat models.Cat) CatDetailResponse {
 	return CatDetailResponse{
-		Id:          strconv.Itoa(cat.ID),
+		Id:          strconv.Itoa(cat.Id),
 		Name:        cat.Name,
 		Race:        cat.Race,
 		Sex:         cat.Sex,
@@ -307,7 +308,7 @@ func (p *Cat) AddCat(c *fiber.Ctx) error {
 	}
 
 	cat, err := p.Database.Add(c.UserContext(), models.Cat{
-		UserID:      userID,
+		UserId:      userID,
 		Name:        payload.Name,
 		Race:        payload.Race,
 		Sex:         payload.Sex,

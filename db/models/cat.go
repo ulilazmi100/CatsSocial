@@ -6,8 +6,8 @@ import (
 
 type (
 	Cat struct {
-		ID          int       `json:"id"`
-		UserID      int       `json:"user_id"`
+		Id          int       `json:"id"`
+		UserId      int       `json:"user_id"`
 		Name        string    `json:"name"`
 		Race        string    `json:"race"`
 		Sex         string    `json:"sex"`
