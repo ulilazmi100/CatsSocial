@@ -40,7 +40,7 @@ func LoadConfig() (Config, error) {
 	}
 
 	if os.Getenv("APP_PORT") == "" {
-		config.APPPort = "8000"
+		config.APPPort = "8080"
 	}
 
 	config.BcryptSalt = salt
