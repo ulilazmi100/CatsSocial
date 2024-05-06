@@ -79,9 +79,9 @@ func (m *MatchHandler) Create(c *fiber.Ctx) error {
 	}
 
 	var payload struct {
-		matchCatId string `json:"matchCatId"`
-		userCatId  string `json:"userCatId"`
-		message    string `json:"message"`
+		MatchCatId string `json:"matchCatId"`
+		UserCatId  string `json:"userCatId"`
+		Message    string `json:"message"`
 	}
 
 	if err := c.BodyParser(&payload); err != nil {
@@ -89,7 +89,7 @@ func (m *MatchHandler) Create(c *fiber.Ctx) error {
 	}
 
 	var (
-		lenMessage = len(payload.message)
+		lenMessage = len(payload.Message)
 		isValid    = func(length int) bool {
 			return length >= 5 && length <= 120
 		}
@@ -99,7 +99,7 @@ func (m *MatchHandler) Create(c *fiber.Ctx) error {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
-	catID, err := strconv.Atoi(c.Params(payload.userCatId))
+	catID, err := strconv.Atoi(payload.UserCatId)
 	if err != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
@@ -112,7 +112,12 @@ func (m *MatchHandler) Create(c *fiber.Ctx) error {
 		return m.handleError(c, err)
 	}
 
-	matchCat, err := m.CatDatabase.FindByID(c.UserContext(), catID)
+	matchCatID, err := strconv.Atoi(payload.MatchCatId)
+	if err != nil {
+		return c.SendStatus(http.StatusBadRequest)
+	}
+
+	matchCat, err := m.CatDatabase.FindByID(c.UserContext(), matchCatID)
 	if err != nil {
 		if err == functions.ErrNoRow {
 			return m.handleError(c, fiber.ErrNotFound)
@@ -138,20 +143,21 @@ func (m *MatchHandler) Create(c *fiber.Ctx) error {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
-	matchCatIdInt, err := strconv.Atoi(payload.matchCatId)
+	matchCatIdInt, err := strconv.Atoi(payload.MatchCatId)
 	if err != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
-	userCatIdInt, err := strconv.Atoi(payload.userCatId)
+	userCatIdInt, err := strconv.Atoi(payload.UserCatId)
 	if err != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
 	if err := m.Match.Create(c.UserContext(), models.Match{
-		UserId:     userID,
-		MatchCatId: matchCatIdInt,
-		UserCatId:  userCatIdInt,
-		Message:    payload.message,
+		UserId:      userID,
+		MatchUserId: matchCat.UserId,
+		MatchCatId:  matchCatIdInt,
+		UserCatId:   userCatIdInt,
+		Message:     payload.Message,
 	}); err != nil {
 		return c.SendStatus(http.StatusInternalServerError)
 	}
@@ -261,14 +267,14 @@ func (m *MatchHandler) Get(c *fiber.Ctx) error {
 
 func (m *MatchHandler) Approve(c *fiber.Ctx) error {
 	var payload struct {
-		matchId string `json:"matchId"`
+		MatchId string `json:"matchId"`
 	}
 
 	if err := c.BodyParser(&payload); err != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
-	match, err := m.Match.GetMatchById(c.UserContext(), payload.matchId)
+	match, err := m.Match.GetMatchById(c.UserContext(), payload.MatchId)
 	if err != nil {
 		if err == functions.ErrNoRow {
 			return m.handleError(c, fiber.ErrNotFound)
@@ -367,14 +373,14 @@ func (m *MatchHandler) Approve(c *fiber.Ctx) error {
 
 func (m *MatchHandler) Reject(c *fiber.Ctx) error {
 	var payload struct {
-		matchId string `json:"matchId"`
+		MatchId string `json:"matchId"`
 	}
 
 	if err := c.BodyParser(&payload); err != nil {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
-	match, err := m.Match.GetMatchById(c.UserContext(), payload.matchId)
+	match, err := m.Match.GetMatchById(c.UserContext(), payload.MatchId)
 	if err != nil {
 		if err == functions.ErrNoRow {
 			return m.handleError(c, fiber.ErrNotFound)
