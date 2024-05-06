@@ -6,6 +6,7 @@ import (
 	"CatsSocial/db/models"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -50,7 +51,7 @@ type (
 		Sex         string   `json:"sex"`
 		AgeInMonth  int      `json:"ageInMonth"`
 		Description string   `json:"description"`
-		ImageUrls   []string `json:"imageUrl"`
+		ImageUrls   []string `json:"imageUrls"`
 	}
 
 	QueryFilterGetCats struct {
@@ -77,7 +78,7 @@ type (
 		Sex         string   `json:"sex"`
 		AgeInMonth  int      `json:"ageInMonth"`
 		Description string   `json:"description"`
-		ImageUrls   []string `json:"imageUrl"`
+		ImageUrls   []string `json:"imageUrls"`
 		HasMatched  bool     `json:"hasMatched"`
 		CreatedAt   string   `json:"createdAt"`
 	}
@@ -224,17 +225,17 @@ func (p *Cat) GetCats(c *fiber.Ctx) error {
 		operator string
 		value    int
 	)
-
+	log.Println("Print Here")
 	var filter QueryFilterGetCats
 	if err := c.QueryParser(&filter); err != nil {
 		return p.handleError(c, errors.New(fmt.Sprintf("failed to parse query params: %v", err.Error())))
 	}
-
+	log.Println("Print Here")
 	err = filter.Validate()
 	if err != nil {
 		return p.handleError(c, err)
 	}
-
+	log.Println("Print Here")
 	if c.Locals("user_id") != nil {
 		userIDClaim := c.Locals("user_id").(string)
 		userID, err = strconv.Atoi(userIDClaim)
@@ -242,14 +243,14 @@ func (p *Cat) GetCats(c *fiber.Ctx) error {
 			return p.handleError(c, errors.New(fmt.Sprintf("failed parse user id: %v", err.Error())))
 		}
 	}
-
+	log.Println("Print Here")
 	if len(filter.AgeInMonth) != 0 {
 		operator, value, err = parseAgeInMonthQuery(filter.AgeInMonth)
 		if err != nil {
 			return p.handleError(c, errors.New(fmt.Sprintf("failed parse user ageInMonthQuery: %v", err.Error())))
 		}
 	}
-
+	log.Println("Print Here")
 	filterDB := models.FilterGetCats{
 		Id:                 filter.Id,
 		Limit:              filter.Limit,
