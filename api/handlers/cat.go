@@ -173,20 +173,22 @@ func (p *Cat) convertCatModelToDetailResponse(cat models.Cat) CatDetailResponse 
 func (p *Cat) convertCatsToGetCatsResponse(
 	cats []models.Cat,
 	limit, offset, total int,
-) GetCatsResponse {
+) []CatDetailResponse {
 	var result []CatDetailResponse
 	for _, cat := range cats {
 		result = append(result, p.convertCatModelToDetailResponse(cat))
 	}
 
-	return GetCatsResponse{
-		Data: result,
-		// Meta: Meta{
-		// 	Limit:  limit,
-		// 	Offset: offset,
-		// 	Total:  total,
-		// },
-	}
+	// return GetCatsResponse{
+	// 	Data: result,
+	// 	// Meta: Meta{
+	// 	// 	Limit:  limit,
+	// 	// 	Offset: offset,
+	// 	// 	Total:  total,
+	// 	// },
+	// }
+
+	return result
 }
 
 func (p *Cat) handleError(c *fiber.Ctx, err error) error {
