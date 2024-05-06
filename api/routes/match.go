@@ -14,5 +14,5 @@ func MatchRoutes(app *fiber.App, h handlers.MatchHandler) {
 	g.Get("", h.Get)
 	g.Post("/approve", h.Approve)
 	g.Post("/reject", h.Reject)
-	g.Delete("/account/:bankAccountId", h.Delete)
+	g.Delete("/:id", h.Delete)
 }

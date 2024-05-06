@@ -150,17 +150,17 @@ func (m *Match) GetRelatedCatMatches(ctx context.Context, catId int) ([]models.M
 	return result, nil
 }
 
-func (m *Match) Delete(ctx context.Context, userId, accId string) error {
+func (m *Match) Delete(ctx context.Context, userId, matchId string) error {
 	conn, err := m.dbPool.Acquire(ctx)
 	if err != nil {
-		return fmt.Errorf("faield acquire connection from dbpool: %v", err)
+		return fmt.Errorf("failed acquire connection from dbpool: %v", err)
 	}
 
 	defer conn.Release()
 
 	var match models.Match
 
-	err = conn.QueryRow(ctx, `select user_id from matches where id = $1`, accId).Scan(
+	err = conn.QueryRow(ctx, `select user_id from matches where id = $1`, matchId).Scan(
 		&match.UserId,
 	)
 	if err != nil {
@@ -175,7 +175,7 @@ func (m *Match) Delete(ctx context.Context, userId, accId string) error {
 		return ErrUnauthorized
 	}
 
-	_, err = conn.Exec(ctx, "delete from matches where id = $1", accId)
+	_, err = conn.Exec(ctx, "delete from matches where id = $1", matchId)
 
 	return err
 }

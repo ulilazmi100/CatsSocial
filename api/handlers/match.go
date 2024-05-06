@@ -229,21 +229,19 @@ func (m *MatchHandler) convertMatchModelToDetailResponse(c *fiber.Ctx, match mod
 func (m *MatchHandler) convertMatchesToGetMatchesResponse(
 	c *fiber.Ctx,
 	matches []models.Match,
-) (GetMatchesResponse, error) {
+) ([]MatchDetailResponse, error) {
 	var result []MatchDetailResponse
 	for _, match := range matches {
 
 		MatchDetail, err := m.convertMatchModelToDetailResponse(c, match)
 		if err != nil {
-			return GetMatchesResponse{}, err
+			return result, err
 		}
 
 		result = append(result, MatchDetail)
 	}
 
-	return GetMatchesResponse{
-		Data: result,
-	}, nil
+	return result, nil
 }
 
 func (m *MatchHandler) Get(c *fiber.Ctx) error {
@@ -405,7 +403,7 @@ func (m *MatchHandler) Reject(c *fiber.Ctx) error {
 
 func (m *MatchHandler) Delete(c *fiber.Ctx) error {
 	userId := c.Locals("user_id").(string)
-	matchId := c.Params("matchId")
+	matchId := c.Params("id")
 
 	err := m.Match.Delete(c.UserContext(), userId, matchId)
 	if err != nil {
