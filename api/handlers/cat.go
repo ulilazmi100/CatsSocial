@@ -122,7 +122,7 @@ func (app QueryFilterGetCats) Validate() error {
 		// Race should be in the Race enum.
 		validation.Field(&app.Race, validation.In("Persian", "Maine Coon", "Siamese", "Ragdoll", "Bengal", "Sphynx", "British Shorthair", "Abyssinian", "Scottish Fold", "Birman")),
 		// Sex should be either "male" or "female".
-		validation.Field(&app.Sex, validation.Required, validation.In("male", "female")),
+		validation.Field(&app.Sex, validation.In("male", "female")),
 	)
 }
 
@@ -225,17 +225,17 @@ func (p *Cat) GetCats(c *fiber.Ctx) error {
 		operator string
 		value    int
 	)
-	log.Println("Print Here")
+
 	var filter QueryFilterGetCats
 	if err := c.QueryParser(&filter); err != nil {
 		return p.handleError(c, errors.New(fmt.Sprintf("failed to parse query params: %v", err.Error())))
 	}
-	log.Println("Print Here")
+
 	err = filter.Validate()
 	if err != nil {
 		return p.handleError(c, err)
 	}
-	log.Println("Print Here")
+
 	if c.Locals("user_id") != nil {
 		userIDClaim := c.Locals("user_id").(string)
 		userID, err = strconv.Atoi(userIDClaim)
@@ -243,14 +243,14 @@ func (p *Cat) GetCats(c *fiber.Ctx) error {
 			return p.handleError(c, errors.New(fmt.Sprintf("failed parse user id: %v", err.Error())))
 		}
 	}
-	log.Println("Print Here")
+
 	if len(filter.AgeInMonth) != 0 {
 		operator, value, err = parseAgeInMonthQuery(filter.AgeInMonth)
 		if err != nil {
 			return p.handleError(c, errors.New(fmt.Sprintf("failed parse user ageInMonthQuery: %v", err.Error())))
 		}
 	}
-	log.Println("Print Here")
+
 	filterDB := models.FilterGetCats{
 		Id:                 filter.Id,
 		Limit:              filter.Limit,
