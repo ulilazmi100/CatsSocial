@@ -60,10 +60,10 @@ func (p *Cat) constructWhereQuery(ctx context.Context, filter models.FilterGetCa
 	// }
 
 	if filter.AgeInMonthOperator != "" {
-		if filter.AgeInMonthOperator == "=>" {
-			whereSQL = append(whereSQL, " age_in_month >= "+fmt.Sprintf("%d", filter.AgeInMonthValue))
-		} else if filter.AgeInMonthOperator == "=<" {
-			whereSQL = append(whereSQL, " age_in_month <= "+fmt.Sprintf("%d", filter.AgeInMonthValue))
+		if filter.AgeInMonthOperator == ">" {
+			whereSQL = append(whereSQL, " age_in_month > "+fmt.Sprintf("%d", filter.AgeInMonthValue))
+		} else if filter.AgeInMonthOperator == "<" {
+			whereSQL = append(whereSQL, " age_in_month < "+fmt.Sprintf("%d", filter.AgeInMonthValue))
 		} else {
 			whereSQL = append(whereSQL, " age_in_month = "+fmt.Sprintf("%d", filter.AgeInMonthValue))
 		}
@@ -94,13 +94,13 @@ func (p *Cat) FindAll(ctx context.Context, filter models.FilterGetCats, userID i
 
 	sql += " ORDER BY " + "created_at" + " " + "DESC"
 
-	if filter.Limit > 0 {
-		sql += " LIMIT " + fmt.Sprintf("%d", filter.Limit)
-	}
+	// if filter.Limit > 0 {
+	// 	sql += " LIMIT " + fmt.Sprintf("%d", filter.Limit)
+	// }
 
-	if filter.Offset >= 0 {
-		sql += " OFFSET " + fmt.Sprintf("%d", filter.Offset)
-	}
+	// if filter.Offset >= 0 {
+	// 	sql += " OFFSET " + fmt.Sprintf("%d", filter.Offset)
+	// }
 
 	rows, err := conn.Query(ctx, sql)
 	if err != nil {

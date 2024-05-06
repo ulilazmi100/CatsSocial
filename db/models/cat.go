@@ -16,6 +16,7 @@ type (
 		ImageUrls   []string  `json:"imageUrls"`
 		HasMatched  bool      `json:"hasMatched"`
 		CreatedAt   time.Time `json:"createdAt"`
+		UpdatedAt   time.Time `json:"updatedAt"`
 	}
 
 	FilterGetCats struct {

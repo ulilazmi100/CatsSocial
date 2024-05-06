@@ -6,7 +6,6 @@ import (
 	"CatsSocial/db/models"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -30,13 +29,6 @@ const (
 	Abyssinian        Race = "Abyssinian"
 	Scottish_Fold     Race = "Scottish Fold"
 	Birman            Race = "Birman"
-)
-
-type Sex string
-
-const (
-	Male      Sex = "male"
-	FemaleSex     = "female"
 )
 
 type (
@@ -127,21 +119,19 @@ func (app QueryFilterGetCats) Validate() error {
 }
 
 func parseAgeInMonthQuery(query string) (string, int, error) {
-	parts := strings.Split(query, "=")
-	if len(parts) != 2 || parts[0] != "ageInMonth" {
-		return "", 0, fmt.Errorf("invalid query format: %s", query)
-	}
 
 	operator := "="
-	if strings.HasPrefix(parts[1], "<") {
-		operator = "=<"
-		parts[1] = parts[1][1:]
-	} else if strings.HasPrefix(parts[1], ">") {
-		operator = "=>"
-		parts[1] = parts[1][1:]
+	val := query[1:]
+
+	if strings.HasPrefix(query, "<") {
+		operator = "<"
+	} else if strings.HasPrefix(query, ">") {
+		operator = ">"
+	} else {
+		operator = "="
 	}
 
-	value, err := strconv.Atoi(parts[1])
+	value, err := strconv.Atoi(val)
 	if err != nil {
 		return "", 0, fmt.Errorf("invalid value in query: %s", query)
 	}
@@ -276,12 +266,18 @@ func (p *Cat) GetCats(c *fiber.Ctx) error {
 		return p.handleError(c, err)
 	}
 
-	if filter.Limit == 0 {
-		filter.Limit = 5
-	}
+	// if filter.Limit == 0 {
+	// 	filter.Limit = 5
+	// }
 
 	result := p.convertCatsToGetCatsResponse(cats, filter.Limit, filter.Offset, total)
 
+	if len(result) == 0 {
+		return c.Status(http.StatusOK).JSON(map[string]interface{}{
+			"message": "success",
+			"data":    []interface{}{},
+		})
+	}
 	return c.Status(http.StatusOK).JSON(map[string]interface{}{
 		"message": "success",
 		"data":    result,

@@ -11,4 +11,5 @@ type Match struct {
 	Message     string    `json:"message"`
 	Status      string    `json:"status"`
 	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
