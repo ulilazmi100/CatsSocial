@@ -5,3 +5,6 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_password ON users(password);
