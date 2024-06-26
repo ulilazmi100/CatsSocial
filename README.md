@@ -444,6 +444,6 @@ go run main.go
 
 ## 📞 Contact
 
-Muhammad Ulil 'Azmi - [@M_Ulil_Azmi](https://twitter.com/M_Ulil_Azmi)
+[Muhammad Ulil 'Azmi](https://github.com/ulilazmi100) - [@M_Ulil_Azmi](https://twitter.com/M_Ulil_Azmi)
 
 Project Link: [https://github.com/ulilazmi100/CatsSocial](https://github.com/ulilazmi100/CatsSocial)
