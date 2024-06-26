@@ -24,7 +24,7 @@ func NewPgConn(config configs.Config) (*pgxpool.Pool, error) {
 	dbconfig.MaxConnLifetime = 1 * time.Hour
 	dbconfig.MaxConnIdleTime = 30 * time.Minute
 	dbconfig.HealthCheckPeriod = 5 * time.Second
-	dbconfig.MaxConns = 15
+	dbconfig.MaxConns = 25
 	dbconfig.MinConns = 5
 
 	return pgxpool.NewWithConfig(ctx, dbconfig)
