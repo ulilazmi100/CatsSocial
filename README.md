@@ -24,14 +24,12 @@ Set the following environment variables:
 ```bash
 export DB_NAME=your_db_name
 export DB_PORT=5432
-
-
 export DB_HOST=localhost
 export DB_USERNAME=your_db_user
 export DB_PASSWORD=your_db_password
 export DB_PARAMS="sslmode=disabled"
 export JWT_SECRET=your_jwt_secret
-export BCRYPT_SALT=8
+export BCRYPT_SALT=8 or 10 depending your requirements
 ```
 
 #### Running Migrations
@@ -44,6 +42,12 @@ migrate -database "postgres://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NA
 
 ```bash
 go run main.go
+```
+
+#### Optional cleanup if already done or something went wrong (Reverse the migrations if you wanted to)
+
+```bash
+migrate -database "postgres://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?$DB_PARAMS" -path db/migrations down
 ```
 
 ---
@@ -439,6 +443,7 @@ go run main.go
 
 - **Notion:** [Cats Social Notion Page](https://openidea-projectsprint.notion.site/Cats-Social-9e7639a6a68748c38c67f81d9ab3c769)
 - **Tests:** [Project Sprint Batch 2 Week 1 Test Cases](https://github.com/nandanugg/ProjectSprintBatch2Week1TestCases)
+- **Migrations:** [Golang Migration](https://github.com/golang-migrate/migrate)
 
 ---
 
